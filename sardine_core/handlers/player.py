@@ -150,7 +150,7 @@ class Player(BaseHandler):
         """Get period value for the current cycle"""
         for message in pattern.sender.pattern_reduce(
             {"period": pattern.period},
-            self.runner.iter,
+            self.iterator,
             pattern.divisor,
             pattern.rate,
             # use_divisor_to_skip=False,
@@ -206,7 +206,7 @@ class Player(BaseHandler):
             return self.env.scheduler.stop_runner(self.runner)
         elif not self.runner.is_running():
             # Assume we are queuing the first state
-            self.runner.iter = 0
+            self.iterator = 0
             self.runner.reset_states()
 
         # Forcibly reset the interval shift back to 0 to make sure
