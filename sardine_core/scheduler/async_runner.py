@@ -274,11 +274,6 @@ class AsyncRunner:
         return float(self.scheduler.deferred)
 
     @property
-    def defer_duration(self) -> float:
-        """The amount of time to defer function calls."""
-        return self.defer_beats * self.clock.beat_duration
-
-    @property
     def env(self) -> "FishBowl":
         """A shorthand for the scheduler's fish bowl."""
         return self.scheduler.env
@@ -681,11 +676,10 @@ class AsyncRunner:
         arriving_states: list[DeferredState] = []
         while self.deferred_states:
             entry = self.deferred_states[0]
-            entry_deadline = entry.deadline - self.defer_duration
             if (
-                self.clock.time >= entry_deadline
+                self.clock.time >= entry.deadline
                 or state is not None
-                and deadline >= entry_deadline
+                and deadline >= entry.deadline
             ):
                 heapq.heappop(self.deferred_states)
 
@@ -715,7 +709,7 @@ class AsyncRunner:
             # sleeping a full period.
             deadline = self.deferred_states[0].deadline
             # interrupted is true if we are past the deadline
-            interrupted = await self._sleep_until(deadline - self.defer_duration)
+            interrupted = await self._sleep_until(deadline)
             return self._jump_start_iteration()
 
         # NOTE: deadline will always be defined at this point
@@ -751,7 +745,7 @@ class AsyncRunner:
 
         if self.defer_beats:
             delta = self.clock.time - self._expected_time
-            shift = self.defer_duration - delta
+            shift = self.defer_beats * self.clock.beat_duration - delta
             self.time.shift += shift
 
         return await maybe_coro(func, *args, **valid_kwargs)
