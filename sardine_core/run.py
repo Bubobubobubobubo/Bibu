@@ -406,9 +406,7 @@ def panic(*runners: AsyncRunner) -> None:
         D("superpanic")
 
 
-def Pat(
-    pattern: str, i: int = 0, div: int = 1, rate: int = 1, as_text: bool = False
-) -> Any:
+def Pat(pattern: str, i: int = 0, div: int = 1, rate: int = 1) -> Any:
     """
     General purpose pattern interface. This function can be used to summon the global
     parser stored in the fish_bowl. It is generally used to pattern outside of the
@@ -426,15 +424,7 @@ def Pat(
     Returns:
         int: The ith element from the resulting pattern
     """
-    result = bowl.parser.parse(pattern)
-    if print:
-        pattern = []
-        for iterator in range(i):
-            pattern.append(Sender.pattern_element(result, iterator, div, rate))
-        print(pattern)
-        return pattern
-    else:
-        return Sender.pattern_element(result, i, div, rate)
+    return Sender.pattern_element(bowl.parser.parse(pattern), i, div, rate)
 
 
 class Delay:
