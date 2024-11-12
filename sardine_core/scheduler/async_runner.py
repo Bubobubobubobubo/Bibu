@@ -531,6 +531,20 @@ class AsyncRunner:
         self._last_interval = interval
         self._can_correct_interval = False
 
+    def _correct_interval_background_job(self, period: Union[float, int]) -> None:
+        """
+        Alternative version for fixed-rate background jobs. The interval or
+        period is not indexed on the clock like with the _correct_interval
+        method above.
+        """
+        interval = period
+        if self._can_correct_interval and interval != self._last_interval:
+            time = self._expected_time
+            self.interval_shift = self.clock.get_beat_time(period, time=time)
+
+        self._last_interval = interval
+        self._can_correct_interval = False
+
     def _get_next_deadline(self, period: Union[float, int]) -> float:
         """Returns the amount of time until the next interval.
 
@@ -656,7 +670,11 @@ class AsyncRunner:
             kwargs = _discard_kwargs(signature, state.kwargs)
             period = _extract_new_period(signature, state.kwargs, self._default_period)
 
-            self._correct_interval(period)
+            # TODO: what are we doing here?
+            if not self.background_job:
+                self._correct_interval(period)
+            else:
+                self._correct_interval_background_job(period)
             deadline = self._get_next_deadline(period)
 
         # 2) Push any deferred states that have arrived or will arrive onto the stack
@@ -700,9 +718,12 @@ class AsyncRunner:
             interrupted = await self._sleep_until(deadline - self.defer_duration)
             return self._jump_start_iteration()
 
-        interrupted = await self._sleep_unless_jump_started(deadline)
-        if interrupted:
-            return self._skip_iteration()
+        # NOTE: deadline will always be defined at this point
+        if not self.background_job:
+            # interrupted is true if we are past the deadline
+            interrupted = await self._sleep_unless_jump_started(deadline)
+            if interrupted:
+                return self._skip_iteration()
 
         try:
             # Use copied context in function by creating it as a task

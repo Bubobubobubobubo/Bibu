@@ -406,7 +406,9 @@ def panic(*runners: AsyncRunner) -> None:
         D("superpanic")
 
 
-def Pat(pattern: str, i: int = 0, div: int = 1, rate: int = 1) -> Any:
+def Pat(
+    pattern: str, i: int = 0, div: int = 1, rate: int = 1
+) -> Any:
     """
     General purpose pattern interface. This function can be used to summon the global
     parser stored in the fish_bowl. It is generally used to pattern outside of the
