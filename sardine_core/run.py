@@ -407,7 +407,7 @@ def panic(*runners: AsyncRunner) -> None:
 
 
 def Pat(
-    pattern: str, i: int = 0, div: int = 1, rate: int = 1
+    pattern: str, i: int = 0, div: int = 1, rate: int = 1, as_text: bool = False
 ) -> Any:
     """
     General purpose pattern interface. This function can be used to summon the global
@@ -426,7 +426,15 @@ def Pat(
     Returns:
         int: The ith element from the resulting pattern
     """
-    return Sender.pattern_element(bowl.parser.parse(pattern), i, div, rate)
+    result = bowl.parser.parse(pattern)
+    if print:
+        pattern = []
+        for iterator in range(i):
+            pattern.append(Sender.pattern_element(result, iterator, div, rate))
+        print(pattern)
+        return pattern
+    else:
+        return Sender.pattern_element(result, i, div, rate)
 
 
 class Delay:
