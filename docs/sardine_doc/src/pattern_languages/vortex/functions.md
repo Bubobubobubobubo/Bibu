@@ -73,13 +73,13 @@ These functions typically take up to **n** patterns to form a single pattern tha
 - `layer`: Layer up multiple functions on one pattern. For example, the following will play two versions of the pattern at the same time, one reversed and one at twice the speed.
 
 ```python
-    d1 * s("arpy [~ arpy:4]").layer(rev, lambda p: p.fast(2)])
+    d1 * s("arpy [~ arpy:4]").layer(rev, lambda p: p.fast(2))
 ```
 
 If you want to include the original version of the pattern in the layering, use the `id` function:
 
 ```python
-    d1 * s("arpy [~ arpy:4]").layer(id, rev, lambda p: p.fast(2)])
+    d1 * s("arpy [~ arpy:4]").layer(id, rev, lambda p: p.fast(2))
 ```
 
 ## Pattern degradation
@@ -118,7 +118,7 @@ The `sometimes` family of function can sometimes apply a function to a pattern..
     d1 * s('drum(5,8)').n('1 2 3 4').always(fast(2))
 ```
 
-- `almostAlways`: will apply the function 90% of the time, at random.
+- `almostAlways` | `almost_always`: will apply the function 90% of the time, at random.
 
 ```python
     d1 * s('drum(5,8)').n('1 2 3 4').almostAlways(fast(2))
@@ -146,7 +146,7 @@ The `sometimes` family of function can sometimes apply a function to a pattern..
     d1 * s('drum(5,8)').n('1 2 3 4').rarely(fast(2))
 ```
 
-- `almostNever`: will apply the function 10% of the time, at random.
+- `almostNever` | `almost_never`: will apply the function 10% of the time, at random.
 
 ```python
     d1 * s('drum(5,8)').n('1 2 3 4').almostNever(fast(2))
@@ -163,7 +163,7 @@ The `sometimes` family of function can sometimes apply a function to a pattern..
 - `every`: allows you to apply a function based on a condition. You need a function to determine when the function should be applied (*e.g.* a number **n** to apply the function every **n** cycles). You also need a transformation such as `rev` (reverse a pattern) or `fast` (make a pattern faster).
 
 ```python
-    d1 * s('[bd(5,8), jvbass(3,8)]').every(3, lambda p: p.superimpose(fast 2))
+    d1 * s('[bd(5,8), jvbass(3,8)]').every(3, lambda p: p.superimpose(fast(2)))
 ```
 
 - `somecycles`: Apply a function on certain cycles (*e.g* on cycle `3`) ???
@@ -325,7 +325,7 @@ Signal functions are functions generating streams of values to apply to a patter
 - `run`
 - `scan`
 
-- `choosewith`
+- `choose_with`
 - `choose`
 - `choose_cycles`
 - `wchoose`

@@ -810,11 +810,10 @@ class Pattern:
     def always(self, func):
         return self.sometimes_by(1.0, func)
 
-    def always(self, func):
-        return self.sometimes_by(1.0, func)
-
     def almost_always(self, func):
         return self.sometimes_by(0.9, func)
+
+    almostAlways = almost_always
 
     def often(self, func):
         return self.sometimes_by(0.75, func)
@@ -822,8 +821,10 @@ class Pattern:
     def rarely(self, func):
         return self.sometimes_by(0.25, func)
 
-    def almostNever(self, func):
+    def almost_never(self, func):
         return self.sometimes_by(0.10, func)
+
+    almostNever = almost_never
 
     def never(self, func):
         return self.sometimes_by(0.0, func)

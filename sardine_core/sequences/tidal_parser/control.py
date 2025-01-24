@@ -112,6 +112,11 @@ generic_params = [
     ),
     (
         "f",
+        "hpf",
+        "a pattern of numbers from 0 to 1. Applies the cutoff frequency of the high-pass filter.",
+    ),
+    (
+        "f",
         "hold",
         "a pattern of numbers to specify the hold time (in seconds) of an envelope applied to each sample. Only takes effect if `attack` and `release` are also specified.",
     ),
@@ -119,6 +124,11 @@ generic_params = [
         "f",
         "hresonance",
         "a pattern of numbers from 0 to 1. Applies the resonance of the high-pass filter. Has alias @hpq@",
+    ),
+    (
+        "f",
+        "hpq",
+        "a pattern of numbers from 0 to 1. Applies the resonance of the high-pass filter.",
     ),
     ("f", "lagogo", ""),
     ("f", "lclap", ""),
