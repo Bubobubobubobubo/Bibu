@@ -105,7 +105,7 @@ player_names = [
 player_names.remove("SC")  # NOTE: used by SuperCollider command
 player_names.remove("PC")  # NOTE: used by MIDI Program Change
 # player_names += [''.join(tup) for tup in list(product(ascii_lowercase, repeat=3))]
-for player in player_names:
+for player in filter(lambda p: p not in ['id'], player_names):
     p = Player(name=player)
     globals()[player] = p
     bowl.add_handler(p)
