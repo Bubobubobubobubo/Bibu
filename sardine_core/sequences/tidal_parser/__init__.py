@@ -28,11 +28,32 @@ def tidal_factory(env, osc_client, tidal_players):
 
 
 def hush_factory(env, osc_client, tidal_players):
-    def hush():
+    def _hush_all():
         for stream in __streams.values():
             stream.pattern = silence
             tidal_players.remove(stream)
         __streams.clear()
+
+    def _hush(pat):
+        streams = (
+            (n, s) for n, s in __streams.items() if pat in [n, s.name]
+        )
+        name, stream = next(streams, (None, None))
+        if not stream:
+            raise TypeError(f'Stream "{pat}" not found')
+
+        stream.pattern = silence
+        tidal_players.remove(stream)
+        __streams.pop(name)
+
+    def hush(pat=None):
+        if pat is None:
+            return _hush_all()
+        if isinstance(pat, str):
+            return _hush(pat)
+        if not hasattr(pat, 'name') or not isinstance(pat.name, str):
+            raise TypeError(f'Object of type {type(pat)} is not recognized')
+        _hush(pat.name)
 
     return hush
 
